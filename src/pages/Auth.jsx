@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -42,6 +42,15 @@ export default function Auth() {
   const [errors, setErrors]   = useState({});
   const [firebaseErr, setFirebaseErr] = useState('');
 
+  const { user: currentUser } = useAuth();
+
+  // Auto-redirect when user becomes authenticated (handles Google popup flow)
+  useEffect(() => {
+    if (currentUser) {
+      navigate(redirect === 'checkout' ? '/checkout' : redirect ? `/${redirect}` : '/');
+    }
+  }, [currentUser]);
+
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '' });
   const set = (k) => (e) => { setForm(f => ({ ...f, [k]: e.target.value })); setErrors(er => ({ ...er, [k]: '' })); setFirebaseErr(''); };
 
@@ -79,9 +88,14 @@ export default function Auth() {
     setFirebaseErr('');
     try {
       await loginWithGoogle();
-      navigate(redirect === 'checkout' ? '/checkout' : `/${redirect}`);
+      // success — AuthContext onAuthStateChanged will update user
+      // navigate is handled by useEffect below
     } catch (err) {
-      const msg = friendly(err.code); if (msg) setFirebaseErr(msg);
+      // If user is already signed in despite the error, ignore it
+      const { currentUser } = await import('../firebase').then(m => m.auth);
+      if (currentUser) return; // logged in successfully, ignore error
+      const msg = friendly(err.code);
+      if (msg) setFirebaseErr(msg);
     } finally {
       setGLoading(false);
     }
