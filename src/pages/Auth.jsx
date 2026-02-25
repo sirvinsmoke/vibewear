@@ -47,7 +47,7 @@ export default function Auth() {
   // Auto-redirect when user becomes authenticated (handles Google popup flow)
   useEffect(() => {
     if (currentUser) {
-      navigate(redirect === 'checkout' ? '/checkout' : redirect ? `/${redirect}` : '/');
+      navigate(redirect && redirect !== '/' ? (redirect.startsWith('/') ? redirect : `/${redirect}`) : '/');
     }
   }, [currentUser]);
 
@@ -113,7 +113,7 @@ export default function Auth() {
       } else {
         await loginWithEmail(form.email, form.password);
       }
-      navigate(redirect === 'checkout' ? '/checkout' : `/${redirect}`);
+      navigate(redirect && redirect !== '/' ? (redirect.startsWith('/') ? redirect : `/${redirect}`) : '/');
     } catch (err) {
       const msg = friendly(err.code); if (msg) setFirebaseErr(msg);
     } finally {
