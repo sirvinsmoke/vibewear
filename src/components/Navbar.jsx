@@ -23,6 +23,12 @@ export default function Navbar() {
 
   useEffect(() => { setMenuOpen(false); }, [location]);
 
+  // Lock body scroll when menu is open
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
+
   const navLinks = [
     { to: '/', label: 'Home' },
     { to: '/products', label: 'Products' },
@@ -68,19 +74,10 @@ export default function Navbar() {
             <button
               onClick={() => setCurrencyOpen(o => !o)}
               style={{
-                background: 'rgba(255,255,255,0.06)',
-                border: '1px solid rgba(255,255,255,0.12)',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                color: '#ccc',
-                padding: '4px 10px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '5px',
-                fontFamily: 'var(--font-mono)',
-                fontSize: '0.65rem',
-                letterSpacing: '0.08em',
-                transition: 'all 0.2s',
+                background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)',
+                borderRadius: '8px', cursor: 'pointer', color: '#ccc',
+                padding: '4px 10px', display: 'flex', alignItems: 'center', gap: '5px',
+                fontFamily: 'var(--font-mono)', fontSize: '0.65rem', letterSpacing: '0.08em', transition: 'all 0.2s',
               }}
               onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
               onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.06)'}
@@ -92,14 +89,9 @@ export default function Navbar() {
                 <path d="m6 9 6 6 6-6"/>
               </svg>
             </button>
-
-            {/* Dropdown */}
             {currencyOpen && (
               <>
-                <div
-                  style={{ position: 'fixed', inset: 0, zIndex: 149 }}
-                  onClick={() => setCurrencyOpen(false)}
-                />
+                <div style={{ position: 'fixed', inset: 0, zIndex: 149 }} onClick={() => setCurrencyOpen(false)} />
                 <div style={{
                   position: 'absolute', top: 'calc(100% + 8px)', right: 0,
                   background: '#0e0e0e', border: '1px solid rgba(255,255,255,0.1)',
@@ -111,9 +103,7 @@ export default function Navbar() {
                     Select Currency
                   </div>
                   {CURRENCIES.map(cur => (
-                    <button
-                      key={cur.code}
-                      onClick={() => { setCurrency(cur.code); setCurrencyOpen(false); }}
+                    <button key={cur.code} onClick={() => { setCurrency(cur.code); setCurrencyOpen(false); }}
                       style={{
                         width: '100%', display: 'flex', alignItems: 'center', gap: '10px',
                         padding: '9px 10px', borderRadius: '8px', border: 'none',
@@ -125,12 +115,8 @@ export default function Navbar() {
                       onMouseLeave={e => { if (currency !== cur.code) e.currentTarget.style.background = 'transparent'; }}
                     >
                       <span style={{ fontSize: '1.1rem', lineHeight: 1 }}>{cur.flag}</span>
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.72rem', letterSpacing: '0.06em', flex: 1, textAlign: 'left' }}>
-                        {cur.code}
-                      </span>
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.62rem', color: '#555' }}>
-                        {cur.symbol} · {cur.name}
-                      </span>
+                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.72rem', letterSpacing: '0.06em', flex: 1, textAlign: 'left' }}>{cur.code}</span>
+                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.62rem', color: '#555' }}>{cur.symbol} · {cur.name}</span>
                       {currency === cur.code && (
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5"><path d="m5 12 5 5 9-9"/></svg>
                       )}
@@ -141,12 +127,10 @@ export default function Navbar() {
             )}
           </div>
 
-          {/* Account - hidden on mobile, shown in hamburger menu */}
+          {/* Account - desktop only */}
           <div className="account-btn-desktop" style={{ position: 'relative' }} ref={accountRef}>
-            <button
-              onClick={() => setAccountOpen(o => !o)}
-              style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#aaa', padding: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}
-            >
+            <button onClick={() => setAccountOpen(o => !o)}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#aaa', padding: '4px', display: 'flex', alignItems: 'center', gap: '6px' }}>
               {user?.photoURL
                 ? <img src={user.photoURL} alt="" style={{ width: 22, height: 22, borderRadius: '50%', objectFit: 'cover' }} />
                 : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -184,23 +168,19 @@ export default function Navbar() {
               </>
             )}
           </div>
-          <button onClick={() => setSearchOpen && setSearchOpen(true)}
-            className="search-btn-desktop"
+
+          <button onClick={() => setSearchOpen && setSearchOpen(true)} className="search-btn-desktop"
             style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#aaa', padding: '4px', display: 'flex', alignItems: 'center' }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
           </button>
+
           <Link to="/cart" style={{ position: 'relative', color: '#aaa', display: 'flex', alignItems: 'center' }}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
             {cartCount > 0 && (
-              <span style={{
-                position: 'absolute', top: '-8px', right: '-8px',
-                background: '#fff', color: '#000', borderRadius: '50%',
-                width: '16px', height: '16px', fontSize: '9px',
-                fontFamily: 'var(--font-mono)', display: 'flex',
-                alignItems: 'center', justifyContent: 'center', fontWeight: 700,
-              }}>{cartCount}</span>
+              <span style={{ position: 'absolute', top: '-8px', right: '-8px', background: '#fff', color: '#000', borderRadius: '50%', width: '16px', height: '16px', fontSize: '9px', fontFamily: 'var(--font-mono)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700 }}>{cartCount}</span>
             )}
           </Link>
+
           <button onClick={() => setMenuOpen(!menuOpen)} className="hamburger-btn"
             style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '6px', display: 'flex', flexDirection: 'column', gap: '4px', alignItems: 'flex-end', justifyContent: 'center' }}>
             <span style={{ display: 'block', width: '22px', height: '2px', background: '#ccc', borderRadius: '2px', transition: 'all 0.25s', transform: menuOpen ? 'rotate(45deg) translateY(6px)' : 'none' }} />
@@ -210,168 +190,125 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* Mobile Menu */}
+      {/* ── Mobile Menu ── */}
       <div style={{
         position: 'fixed', inset: 0, zIndex: 99,
         background: '#050505',
         display: 'flex', flexDirection: 'column',
-        paddingTop: '80px', paddingBottom: '80px',
+        paddingTop: '64px',
         transform: menuOpen ? 'translateX(0)' : 'translateX(100%)',
         transition: 'transform 0.35s cubic-bezier(0.4,0,0.2,1)',
+        overflowY: 'auto',          // ← scrollable
+        overflowX: 'hidden',
+        WebkitOverflowScrolling: 'touch',
+        paddingBottom: '80px',      // ← space above bottom nav
       }}>
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '0 2rem', gap: '0' }}>
-          {navLinks.map((link, i) => (
+        {/* Nav links */}
+        <div style={{ padding: '0.5rem 2rem' }}>
+          {navLinks.map((link) => (
             <Link key={link.to} to={link.to} style={{
               textDecoration: 'none', fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(2rem, 8vw, 3.5rem)',
-              color: location.pathname === link.to ? '#fff' : '#333',
-              letterSpacing: '0.04em', borderBottom: '1px solid #111',
-              padding: '1rem 0', display: 'flex', alignItems: 'center',
-              justifyContent: 'space-between', transition: 'color 0.2s',
+              fontSize: 'clamp(2.4rem, 9vw, 4rem)',   // ← bigger
+              color: location.pathname === link.to ? '#fff' : '#444',
+              letterSpacing: '0.04em',
+              borderBottom: '1px solid #111',
+              padding: '1.1rem 0',
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              transition: 'color 0.2s',
             }}
             onTouchStart={e => e.currentTarget.style.color = '#fff'}
-            onTouchEnd={e => e.currentTarget.style.color = location.pathname === link.to ? '#fff' : '#333'}>
+            onTouchEnd={e => e.currentTarget.style.color = location.pathname === link.to ? '#fff' : '#444'}>
               <span>{link.label}</span>
-              <span style={{ fontSize: '1.2rem', color: '#222' }}>→</span>
+              <span style={{ fontSize: '1.4rem', color: '#333' }}>→</span>
             </Link>
           ))}
         </div>
-        <div style={{ padding: '1.5rem 2rem', borderTop: '1px solid #111', display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
-          {/* Profile in mobile menu */}
+
+        {/* Bottom actions */}
+        <div style={{ padding: '1.5rem 2rem', borderTop: '1px solid #111', display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: 'auto' }}>
+          {/* Profile */}
           {user ? (
-            <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', overflow: 'hidden' }}>
-              <div style={{ padding: '12px 16px', borderBottom: '1px solid rgba(255,255,255,0.07)', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '14px', overflow: 'hidden' }}>
+              <div style={{ padding: '14px 18px', borderBottom: '1px solid rgba(255,255,255,0.07)', display: 'flex', alignItems: 'center', gap: '12px' }}>
                 {user.photoURL
-                  ? <img src={user.photoURL} alt="" style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover' }} />
-                  : <div style={{ width: 28, height: 28, borderRadius: '50%', background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  ? <img src={user.photoURL} alt="" style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover' }} />
+                  : <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#aaa" strokeWidth="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                     </div>
                 }
                 <div>
-                  <p style={{ color: '#fff', fontSize: '0.78rem', fontWeight: 600 }}>{user.displayName || 'Account'}</p>
-                  <p style={{ color: '#555', fontSize: '0.62rem', fontFamily: 'var(--font-mono)' }}>{user.email}</p>
+                  <p style={{ color: '#fff', fontSize: '0.9rem', fontWeight: 600 }}>{user.displayName || 'Account'}</p>
+                  <p style={{ color: '#555', fontSize: '0.72rem', fontFamily: 'var(--font-mono)' }}>{user.email}</p>
                 </div>
               </div>
-              <Link to="/orders" onClick={() => setMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '11px 16px', color: '#888', textDecoration: 'none', fontSize: '0.75rem', fontFamily: 'var(--font-mono)', letterSpacing: '0.08em', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+              <Link to="/orders" onClick={() => setMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '14px 18px', color: '#999', textDecoration: 'none', fontSize: '0.85rem', fontFamily: 'var(--font-mono)', letterSpacing: '0.08em', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
                 ORDER HISTORY
               </Link>
-              <button onClick={() => { logout(); setMenuOpen(false); }} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '10px', padding: '11px 16px', background: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer', fontSize: '0.75rem', fontFamily: 'var(--font-mono)', letterSpacing: '0.08em' }}>
-                <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8"><path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+              <button onClick={() => { logout(); setMenuOpen(false); }} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: '12px', padding: '14px 18px', background: 'transparent', border: 'none', color: '#f87171', cursor: 'pointer', fontSize: '0.85rem', fontFamily: 'var(--font-mono)', letterSpacing: '0.08em' }}>
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.8"><path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
                 SIGN OUT
               </button>
             </div>
           ) : (
-            <Link to="/auth" onClick={() => setMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '12px 16px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', color: '#aaa', textDecoration: 'none', fontSize: '0.75rem', fontFamily: 'var(--font-mono)', letterSpacing: '0.08em' }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <Link to="/auth" onClick={() => setMenuOpen(false)} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '16px 18px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '14px', color: '#aaa', textDecoration: 'none', fontSize: '0.85rem', fontFamily: 'var(--font-mono)', letterSpacing: '0.08em' }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
               SIGN IN / CREATE ACCOUNT
             </Link>
           )}
 
-          {/* Search in mobile menu */}
-          <button
-            onClick={() => { setSearchOpen && setSearchOpen(true); setMenuOpen(false); }}
-            style={{
-              background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
-              borderRadius: '10px', cursor: 'pointer', color: '#888',
-              padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '12px',
-              fontFamily: 'var(--font-mono)', fontSize: '0.68rem', letterSpacing: '0.12em',
-              textTransform: 'uppercase', width: '100%',
-            }}
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          {/* Search */}
+          <button onClick={() => { setSearchOpen && setSearchOpen(true); setMenuOpen(false); }}
+            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', cursor: 'pointer', color: '#999', padding: '14px 18px', display: 'flex', alignItems: 'center', gap: '12px', fontFamily: 'var(--font-mono)', fontSize: '0.8rem', letterSpacing: '0.12em', textTransform: 'uppercase', width: '100%' }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
             Search Products
           </button>
 
           <div>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: '#444', letterSpacing: '0.2em', marginBottom: '0.5rem' }}>FOLLOW US</div>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.62rem', color: '#444', letterSpacing: '0.2em', marginBottom: '0.5rem' }}>FOLLOW US</div>
             <a href="https://instagram.com/vibewear_" target="_blank" rel="noreferrer"
-              style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: '#888', letterSpacing: '0.15em', textDecoration: 'none' }}>
+              style={{ fontFamily: 'var(--font-mono)', fontSize: '0.8rem', color: '#888', letterSpacing: '0.15em', textDecoration: 'none' }}>
               @vibewear_ ↗
             </a>
           </div>
         </div>
       </div>
 
-      {/* Bottom Nav - Mobile */}
-      {/* Bottom Nav - Mobile */}
-<div className="bottom-nav" style={{
-  position: 'fixed',
-  bottom: 0,
-  left: 0,
-  right: 0,
-  zIndex: 98,
-  background: 'rgba(18,18,18,0.98)', // slightly lighter
-  borderTop: '1px solid rgba(255,255,255,0.08)', // softer light border
-  display: 'flex',
-  height: '60px',
-  backdropFilter: 'blur(14px)',
-  boxShadow: '0 -6px 25px rgba(0,0,0,0.6)', // stronger separation
-}}>
-  {[
-    { to: '/', label: 'Home', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> },
-    { to: '/products', label: 'Shop', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> },
-    { to: '/cart', label: 'Cart', badge: cartCount, icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg> },
-    { to: '/find-store', label: 'Store', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> },
-    { to: '/contact', label: 'Contact', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> },
-  ].map(item => {
-    const active = location.pathname === item.to;
-    return (
-      <Link
-        key={item.to}
-        to={item.to}
-        style={{
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '3px',
-          textDecoration: 'none',
-          color: active ? '#ffffff' : '#b0b0b0', // brighter inactive
-          position: 'relative',
-          transition: 'color 0.2s',
-          textShadow: active ? '0 0 8px rgba(255,255,255,0.4)' : 'none', // glow
-        }}
-      >
-        {item.badge > 0 && (
-          <span style={{
-            position: 'absolute',
-            top: '6px',
-            left: '55%',
-            background: '#ffffff',
-            color: '#000',
-            borderRadius: '50%',
-            minWidth: '16px',
-            height: '16px',
-            fontSize: '9px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontWeight: 700,
-            boxShadow: '0 0 10px rgba(255,255,255,0.6)', // glow badge
-          }}>
-            {item.badge}
-          </span>
-        )}
-
-        {item.icon}
-
-        <span style={{
-          fontFamily: 'var(--font-mono)',
-          fontSize: '0.55rem',
-          letterSpacing: '0.08em',
-          textTransform: 'uppercase'
-        }}>
-          {item.label}
-        </span>
-      </Link>
-    );
-  })}
-</div>
+      {/* ── Bottom Nav ── */}
+      <div className="bottom-nav" style={{
+        position: 'fixed', bottom: 0, left: 0, right: 0, zIndex: 98,
+        background: 'rgba(18,18,18,0.98)', borderTop: '1px solid rgba(255,255,255,0.08)',
+        display: 'flex', height: '60px',
+        backdropFilter: 'blur(14px)', boxShadow: '0 -6px 25px rgba(0,0,0,0.6)',
+      }}>
+        {[
+          { to: '/', label: 'Home', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> },
+          { to: '/products', label: 'Shop', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> },
+          { to: '/cart', label: 'Cart', badge: cartCount, icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg> },
+          { to: '/find-store', label: 'Store', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> },
+          { to: '/contact', label: 'Contact', icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> },
+        ].map(item => {
+          const active = location.pathname === item.to;
+          return (
+            <Link key={item.to} to={item.to} style={{
+              flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+              gap: '3px', textDecoration: 'none', color: active ? '#ffffff' : '#b0b0b0',
+              position: 'relative', transition: 'color 0.2s',
+              textShadow: active ? '0 0 8px rgba(255,255,255,0.4)' : 'none',
+            }}>
+              {item.badge > 0 && (
+                <span style={{ position: 'absolute', top: '6px', left: '55%', background: '#ffffff', color: '#000', borderRadius: '50%', minWidth: '16px', height: '16px', fontSize: '9px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700 }}>
+                  {item.badge}
+                </span>
+              )}
+              {item.icon}
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.55rem', letterSpacing: '0.08em', textTransform: 'uppercase' }}>{item.label}</span>
+            </Link>
+          );
+        })}
+      </div>
 
       <style>{`
-        @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
         @media(min-width:768px){ .hamburger-btn{display:none!important} .bottom-nav{display:none!important} .desktop-nav{display:flex!important} .search-btn-desktop{display:flex!important} .account-btn-desktop{display:block!important} }
         @media(max-width:767px){ .desktop-nav{display:none!important} .search-btn-desktop{display:none!important} .account-btn-desktop{display:none!important} }
       `}</style>

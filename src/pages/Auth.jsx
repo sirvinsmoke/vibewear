@@ -67,7 +67,7 @@ export default function Auth() {
       'auth/invalid-email':          'That email address doesn\'t look right.',
       'auth/weak-password':          'Password is too weak — try something stronger.',
       'auth/too-many-requests':      'Too many attempts. Please wait a moment then try again.',
-      'auth/popup-closed-by-user':   'Sign-in popup was closed. Please try again.',
+      'auth/popup-closed-by-user':   '',
       'auth/network-request-failed': 'Network error. Check your connection.',
     };
     return map[code] || 'Something went wrong. Please try again.';
@@ -81,7 +81,7 @@ export default function Auth() {
       await loginWithGoogle();
       navigate(redirect === 'checkout' ? '/checkout' : `/${redirect}`);
     } catch (err) {
-      setFirebaseErr(friendly(err.code));
+      const msg = friendly(err.code); if (msg) setFirebaseErr(msg);
     } finally {
       setGLoading(false);
     }
@@ -101,7 +101,7 @@ export default function Auth() {
       }
       navigate(redirect === 'checkout' ? '/checkout' : `/${redirect}`);
     } catch (err) {
-      setFirebaseErr(friendly(err.code));
+      const msg = friendly(err.code); if (msg) setFirebaseErr(msg);
     } finally {
       setLoading(false);
     }
