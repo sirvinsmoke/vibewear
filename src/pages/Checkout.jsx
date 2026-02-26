@@ -5,8 +5,8 @@ import { createOrder } from '../lib/api';
 import { useCurrency } from '../context/CurrencyContext';
 import { useAuth } from '../context/AuthContext';
 
-// ⚠️ Replace before going live
-const FLW_PUBLIC_KEY = 'FLWPUBK_TEST-XXXXXXXXXXXXXXXXXXXX-X';
+// ⚠️ Replace with your live Paystack public key before going live
+const PAYSTACK_PUBLIC_KEY = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || 'pk_test_REPLACE_WITH_YOUR_KEY';
 const WHATSAPP_NUMBER = '233XXXXXXXXX';
 
 const COUNTRIES = [
@@ -17,11 +17,11 @@ const COUNTRIES = [
   "Cote d'Ivoire",'Senegal','Cameroon','Tanzania','Uganda','Other',
 ];
 
-function loadFlutterwaveScript() {
+function loadPaystackScript() {
   return new Promise((resolve) => {
-    if (window.FlutterwaveCheckout) { resolve(); return; }
+    if (window.PaystackPop) { resolve(); return; }
     const s = document.createElement('script');
-    s.src = 'https://checkout.flutterwave.com/v3.js';
+    s.src = 'https://js.paystack.co/v1/inline.js';
     s.onload = resolve;
     document.body.appendChild(s);
   });
@@ -159,43 +159,48 @@ export default function Checkout() {
     else window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleFlutterwave = async () => {
+  const handlePaystack = async () => {
+    if (!user?.email) { navigate('/auth?redirect=checkout'); return; }
     setLoading(true);
     try {
-      await loadFlutterwaveScript();
-      const flwCurrency = ['GHS','USD','GBP','EUR','NGN','KES','ZAR'].includes(currency) ? currency : 'USD';
-      const amount = parseFloat((flwCurrency === currency ? grandTotalConverted : grandTotal).toFixed(2));
+      await loadPaystackScript();
+      // Paystack works best in GHS or USD — use GHS if selected, else USD
+      const psCurrency = currency === 'GHS' ? 'GHS' : currency === 'USD' ? 'USD' : 'GHS';
+      const amount = parseFloat(
+        (psCurrency === currency ? grandTotalConverted : convert(grandTotal) ).toFixed(2)
+      );
+      // Paystack amount is in kobo/pesewas (smallest unit) — multiply by 100
+      const amountInSubunit = Math.round(amount * 100);
 
-      window.FlutterwaveCheckout({
-        public_key: FLW_PUBLIC_KEY,
-        tx_ref: `VW-${Date.now()}`,
-        amount, currency: flwCurrency,
-        payment_options: 'card,banktransfer',
-        customer: {
-          email: user.email,
-          phone_number: form.phone,
-          name: `${form.firstName} ${form.lastName}`,
+      const handler = window.PaystackPop.setup({
+        key: PAYSTACK_PUBLIC_KEY,
+        email: user.email,
+        amount: amountInSubunit,
+        currency: psCurrency,
+        ref: `VW-${Date.now()}`,
+        metadata: {
+          custom_fields: [
+            { display_name: 'Customer Name', variable_name: 'customer_name', value: `${form.firstName} ${form.lastName}` },
+            { display_name: 'Phone', variable_name: 'phone', value: form.phone },
+            { display_name: 'Address', variable_name: 'address', value: [form.address, form.address2, form.city, form.stateRegion, form.postalCode, form.country].filter(Boolean).join(', ') },
+            { display_name: 'Items', variable_name: 'items', value: cartItems.map(i => `${i.name} x${i.quantity}`).join(' | ') },
+          ],
         },
-        meta: {
-          address: [form.address, form.address2, form.city, form.stateRegion, form.postalCode, form.country].filter(Boolean).join(', '),
-          items: cartItems.map(i => `${i.name} x${i.quantity}`).join(' | '),
-        },
-        customizations: { title: 'VIBE WEAR', description: `Order – ${itemCount} item(s)`, logo: '' },
         callback: (res) => {
-          if (res.status === 'successful' || res.status === 'completed') {
-            clearCart();
-            navigate('/order-success', {
-              state: {
-                txRef: res.tx_ref, transactionId: res.transaction_id,
-                amount: formatPrice(grandTotal),
-                customer: { ...form, email: user.email },
-                items: cartItems,
-              },
-            });
-          }
+          clearCart();
+          navigate('/order-success', {
+            state: {
+              txRef: res.reference,
+              transactionId: res.transaction,
+              amount: formatPrice(grandTotal),
+              customer: { ...form, email: user.email },
+              items: cartItems,
+            },
+          });
         },
-        onclose: () => setLoading(false),
+        onClose: () => setLoading(false),
       });
+      handler.openIframe();
     } catch (err) {
       console.error(err);
       setLoading(false);
@@ -271,7 +276,7 @@ export default function Checkout() {
 
       <div className="bg-white/[0.03] border border-white/[0.07] rounded-2xl px-5 py-4 space-y-3">
         {[
-          ['🔒','Secure Payment','256-bit SSL · Flutterwave'],
+          ['🔒','Secure Payment','256-bit SSL · Paystack'],
           ['📦','Worldwide Delivery','5–14 business days'],
           ['↩️','Easy Returns','30-day return policy'],
           ['💬','Support','WhatsApp · Always available'],
@@ -525,12 +530,12 @@ export default function Checkout() {
                 <p className="text-brand-cream font-bold text-sm mb-1">💳 Choose How to Pay</p>
                 <p className="text-white/35 text-xs mb-5">Payments are encrypted. We never store your card details.</p>
                 <div className="flex flex-wrap gap-2 mb-5">
-                  {['💳 Visa','💳 Mastercard','🏦 Bank Transfer'].map(m => (
+                  {['💳 Visa','💳 Mastercard','📱 Mobile Money','🏦 Bank Transfer'].map(m => (
                     <span key={m} className="bg-white/[0.04] border border-white/[0.08] rounded-lg px-3 py-1.5 text-xs text-white/40">{m}</span>
                   ))}
                 </div>
 
-                <button onClick={handleFlutterwave} disabled={loading}
+                <button onClick={handlePaystack} disabled={loading}
                   className="w-full bg-white text-black font-bold py-4 rounded-xl hover:bg-brand-cream transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
                   {loading ? (
                     <>
@@ -555,7 +560,7 @@ export default function Checkout() {
                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2" strokeWidth="2"/>
                     <path d="M7 11V7a5 5 0 0110 0v4" strokeWidth="2"/>
                   </svg>
-                  256-bit SSL · Powered by Flutterwave
+                  256-bit SSL · Powered by Paystack
                 </p>
 
                 <div className="flex items-center gap-3 my-5">
