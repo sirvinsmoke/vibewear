@@ -2,7 +2,7 @@ export default function About() {
   const values = [
     { icon: '✦', title: 'Bold by Design', desc: 'Every piece is crafted with intention. We believe clothing should be a statement — a visual language that speaks before you do.' },
     { icon: '◈', title: 'Quality First', desc: 'Heavy cotton, premium fabrics, and zero shortcuts. We build pieces that last and age with you.' },
-    { icon: '❋', title: 'Street Authentic', desc: "Born on the block, not in a boardroom. Every drop is rooted in real culture, real vibes, real people." },
+    { icon: '❋', title: 'Street Authentic', desc: "Born in Accra, not in a boardroom. Every drop is rooted in Ghanaian culture, real vibes, real people." },
     { icon: '◇', title: 'For The Wave', desc: 'VIBE WEAR is for everyone who moves with confidence. Our silhouettes are designed for those who lead, not follow.' },
   ];
 
@@ -36,7 +36,7 @@ export default function About() {
             </div>
             <h2 className="text-brand-cream text-3xl font-bold leading-tight mb-5">Born On The Block.<br />Built for the Wave.</h2>
             <div className="space-y-4 text-brand-muted text-sm leading-relaxed">
-              <p>VIBE WEAR was founded in Lagos with a singular vision — to create a premium street brand that doesn't ask for your attention, it demands it.</p>
+              <p>VIBE WEAR was founded in Accra, Ghana with a singular vision — to create a premium street brand that doesn't ask for your attention, it demands it.</p>
               <p>Every drop is curated, not mass produced. We pick pieces that carry meaning, that have energy — graphic tees, denim, outerwear that tells a story when you walk into a room.</p>
               <p>From our first drop of five tees to Season 4, VIBE WEAR has grown into a community of people who move with intention and dress the same way.</p>
             </div>

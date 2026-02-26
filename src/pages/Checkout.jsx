@@ -7,10 +7,10 @@ import { useAuth } from '../context/AuthContext';
 
 // ⚠️ Replace with your live Paystack public key before going live
 const PAYSTACK_PUBLIC_KEY = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || 'pk_test_REPLACE_WITH_YOUR_KEY';
-const WHATSAPP_NUMBER = '233XXXXXXXXX';
+const WHATSAPP_NUMBER = '233203724311';
 
 const COUNTRIES = [
-  'Ghana','Nigeria','United States','United Kingdom','Canada','Australia',
+  'Ghana','United States','United Kingdom','Canada','Australia',
   'South Africa','Kenya','Germany','France','Italy','Spain','Netherlands',
   'Sweden','Norway','Denmark','Switzerland','Belgium','Portugal','Ireland',
   'New Zealand','Singapore','UAE','Japan','Brazil','India',

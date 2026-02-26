@@ -16,7 +16,7 @@ export const CURRENCIES = [
 // Country code → currency code map for auto-detection
 const COUNTRY_CURRENCY = {
   GH: 'GHS', US: 'USD', GB: 'GBP', CA: 'CAD', AU: 'AUD',
-  NG: 'NGN', ZA: 'ZAR', KE: 'KES',
+  NG: 'NGN', ZA: 'ZAR', KE: 'KES', GH: 'GHS',
   SN: 'XOF', CI: 'XOF', BF: 'XOF', ML: 'XOF', NE: 'XOF', TG: 'XOF', BJ: 'XOF', GW: 'XOF',
   DE: 'EUR', FR: 'EUR', IT: 'EUR', ES: 'EUR', NL: 'EUR', BE: 'EUR', PT: 'EUR', IE: 'EUR',
 };

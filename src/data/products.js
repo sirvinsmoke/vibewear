@@ -81,7 +81,7 @@ export const heroSlides = [
   {
     id: 2,
     title: 'VIBE\nWEAR',
-    subtitle: 'Street-ready fits. Zero compromise. Lagos to the world.',
+    subtitle: 'Street-ready fits. Zero compromise. Accra to the world.',
     cta: 'View Fits',
     badge: 'A Fits',
     image: '/images/products/img_22.jpg',
@@ -99,18 +99,14 @@ export const heroSlides = [
 export const storeLocations = [
   {
     id: 1,
-    name: 'VIBE WEAR Lagos',
-    address: '15 Adeola Odeku Street, Victoria Island, Lagos',
-    phone: '+234 801 234 5678',
-    hours: 'Mon–Sat: 9am–8pm | Sun: 11am–6pm',
-    mapUrl: 'https://maps.google.com',
-  },
-  {
-    id: 2,
-    name: 'VIBE WEAR Ikeja',
-    address: 'Ikeja City Mall, Obafemi Awolowo Way, Ikeja, Lagos',
-    phone: '+234 802 345 6789',
-    hours: 'Mon–Sat: 10am–9pm | Sun: 12pm–7pm',
-    mapUrl: 'https://maps.google.com',
+    name: 'VIBE WEAR — Accra Store',
+    address: 'Atomic Down Roundabout, Beside Power Filling Station (Dome-Kwabenya), Accra, Ghana',
+    hours: 'Mon – Sat: 11am – 8pm',
+    phone: '+233 20 372 4311',
+    whatsapp: 'https://wa.me/233203724311',
+    instagram: 'https://instagram.com/vibewear_',
+    mapUrl: 'https://maps.google.com/?q=Atomic+Down+Roundabout+Dome+Kwabenya+Accra+Ghana',
+    pickup: true,
+    delivery: true,
   },
 ];

@@ -39,6 +39,10 @@ export default function FindStore() {
                   <svg className="w-4 h-4 text-brand-muted mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                   <span className="text-brand-muted text-xs leading-relaxed">{store.hours}</span>
                 </div>
+                <div className="flex items-center gap-2 pt-1">
+                  <span className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-semibold px-2.5 py-1 rounded-full">✓ Pickup Available</span>
+                  <span className="bg-sky-500/10 border border-sky-500/20 text-sky-400 text-[10px] font-semibold px-2.5 py-1 rounded-full">🚚 Delivery Available</span>
+                </div>
               </div>
               <a href={store.mapUrl} target="_blank" rel="noreferrer" className="mt-5 flex items-center gap-1.5 text-white text-xs font-semibold hover:gap-2.5 transition-all">
                 Get Directions <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>

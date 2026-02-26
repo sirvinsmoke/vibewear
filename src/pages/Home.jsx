@@ -69,7 +69,7 @@ export default function Home() {
       {/* Marquee Strip */}
       <div className="bg-white/4 border-y border-white/8 overflow-hidden py-3">
         <div className="flex gap-10 animate-[marquee_22s_linear_infinite] whitespace-nowrap">
-          {Array(8).fill(['Free Shipping Over ₦50k', 'New Season Drop', 'WE THE WAVE', 'Street Premium Quality']).flat().map((text, i) => (
+          {Array(8).fill(['Free Delivery in Accra', 'New Season Drop', 'WE THE WAVE', 'Street Premium Quality']).flat().map((text, i) => (
             <span key={i} className="text-white/60 text-xs font-semibold uppercase tracking-widest flex items-center gap-4">
               {text} <span className="opacity-40">✦</span>
             </span>
@@ -151,7 +151,7 @@ export default function Home() {
                 <span className="text-black/50 text-xs font-semibold uppercase tracking-widest">The Brand</span>
                 <h2 className="text-black text-4xl md:text-5xl font-black mt-2 mb-4 leading-tight">Bold by Design</h2>
                 <p className="text-black/65 leading-relaxed mb-7 text-sm md:text-base">
-                  VIBE WEAR was born on the block and built for the streets. Our drops are for those who move with confidence — bold fits, premium fabrics, and zero compromise on style.
+                  VIBE WEAR was born in Accra and built for the streets of Ghana. Our drops are for those who move with confidence — bold fits, premium fabrics, and zero compromise on style.
                 </p>
                 <div className="grid grid-cols-3 gap-5 mb-7">
                   {[['2021', 'Founded'], ['30+', 'Drops'], ['5K+', 'On The Wave']].map(([num, label]) => (
@@ -206,8 +206,8 @@ export default function Home() {
             <img src="/images/products/img_22.jpg" alt="VIBE WEAR Store" className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
             <div className="absolute bottom-5 left-5">
-              <p className="text-white/60 text-xs uppercase tracking-widest">Lagos Flagship</p>
-              <p className="text-white font-bold text-lg mt-1">Victoria Island</p>
+              <p className="text-white/60 text-xs uppercase tracking-widest">Accra Store</p>
+              <p className="text-white font-bold text-lg mt-1">Dome-Kwabenya, Accra</p>
             </div>
           </div>
         </div>
