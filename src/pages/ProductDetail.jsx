@@ -6,6 +6,8 @@ import { fetchProducts } from '../lib/api';
 import StarRating from '../components/StarRating';
 import ProductCard from '../components/ProductCard';
 
+const BASE = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+
 export default function ProductDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -27,13 +29,13 @@ export default function ProductDetail() {
     setSelectedColor(null);
     setSelectedImg(0);
 
-    fetch(`http://localhost:4000/api/products/${id}`)
+    fetch(`${BASE}/products/${id}`)
       .then(r => r.json())
       .then(data => {
         if (data.success) {
           setProduct(data.product);
           // Fetch related products
-          return fetch('http://localhost:4000/api/products')
+          return fetch(`${BASE}/products`)
             .then(r => r.json())
             .then(all => {
               if (all.success) {
